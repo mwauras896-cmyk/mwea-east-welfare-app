@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mwea East JSS Teachers Welfare</title>
+    <style>
+        :root {
+            --deep-teal: #004d40;
+            --gold: #d4af37;
+            --light-bg: #f4f6f7;
+            --text-dark: #333333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: var(--deep-teal);
+            color: var(--gold);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 4px solid var(--gold);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        header p {
+            margin: 0.5rem 0 0 0;
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 15px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: var(--deep-teal);
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 5px;
+            font-size: 1.2rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: var(--deep-teal);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            padding: 12px;
+            width: 100%;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00332c;
+        }
+        .admin-notice {
+            background: #fff8e1;
+            border-left: 4px solid var(--gold);
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Mwea East JSS Teachers Welfare</h1>
+        <p>Transparency • Accountability • Support</p>
+    </header>
+
+    <div class="container">
+        <div class="admin-notice">
+            <strong>Chairman Security Notice:</strong> All administrative verifications, disbursements, and password resets are exclusively managed by the Chairman.
+        </div>
+
+        <h2>M-Pesa Contribution Portal</h2>
+        <div class="form-group">
+            <label for="phone">Safaricom Phone Number</label>
+            <input type="tel" id="phone" placeholder="07XXXXXXXX">
+        </div>
+        <div class="form-group">
+            <label for="amount">Contribution Amount (KES)</label>
+            <input type="number" id="amount" placeholder="1000">
+        </div>
+        <button onclick="triggerStkPush()">Pay via M-Pesa STK Push</button>
+    </div>
+
+    <script>
+        function triggerStkPush() {
+            const phone = document.getElementById('phone').value;
+            const amount = document.getElementById('amount').value;
+            if(!phone || !amount) {
+                alert('Please enter both phone number and amount.');
+                return;
+            }
+            alert(`Initiating STK Push of KES ${amount} to ${phone}... Check your phone for the M-Pesa prompt.`);
+        }
+    </script>
+</body>
+</html>
