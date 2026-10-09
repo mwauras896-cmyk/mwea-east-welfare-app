@@ -128,7 +128,6 @@
                 return;
             }
 
-            // Standardize phone number format to 254XXXXXXXXX
             if (phone.startsWith('0')) {
                 phone = '254' + phone.slice(1);
             } else if (phone.startsWith('+254')) {
@@ -154,11 +153,10 @@
                 if (response.ok) {
                     alert(`STK Push initiated successfully to ${phone}! Check your phone for the M-Pesa prompt.`);
                 } else {
-                    alert(`STK Push Failed: ${data.message || 'Something went wrong.'}`);
+                    alert(`Server Error: ${JSON.stringify(data)}`);
                 }
             } catch (error) {
-                console.error('Error triggering STK push:', error);
-                alert('Unable to connect to the payment server. Please try again.');
+                alert(`Network/CORS Error: ${error.message}`);
             } finally {
                 payBtn.disabled = false;
                 payBtn.innerText = 'Pay via M-Pesa STK Push';
