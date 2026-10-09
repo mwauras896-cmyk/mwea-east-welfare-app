@@ -1,13 +1,16 @@
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
+const cors = require('cors'); // 1. Added cors package
 require('dotenv').config();
 
 const app = express();
+
+// 2. Enable CORS and body parsing
+app.use(cors());
 app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 3000;
-
 const CONSUMER_KEY = process.env.MPESA_CONSUMER_KEY;
 const CONSUMER_SECRET = process.env.MPESA_CONSUMER_SECRET;
 const BUSINESS_SHORT_CODE = process.env.MPESA_SHORTCODE;
@@ -19,7 +22,11 @@ async function getAccessToken(req, res, next) {
     try {
         const response = await axios.get(
             'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
-            { headers: { Authorization: `Basic ${auth}` } }
+            {
+                headers: {
+                    Authorization: `Basic ${auth}`
+                }
+            }
         );
         req.accessToken = response.data.access_token;
         next();
@@ -29,9 +36,15 @@ async function getAccessToken(req, res, next) {
     }
 }
 
-app.post('/api/stk-push', getAccessToken, async (req, res) => {
-    const { phoneNumber, amount, accountReference } = req.body;
-    let formattedPhone = phoneNumber.toString().replace(/^0/, '254');
+// 3. Changed route to /api/stkpush to match frontend, and updated phone parameter parsing
+app.post('/api/stkpush', getAccessToken, async (req, res) => {
+    const { phone, amount, accountReference } = req.body; 
+    
+    if (!phone || !amount) {
+        return res.status(400).json({ success: false, error: 'Phone number and amount are required' });
+    }
+
+    let formattedPhone = phone.toString().replace(/^0/, '254');
     const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, 14);
     const password = Buffer.from(`${BUSINESS_SHORT_CODE}${PASSKEY}${timestamp}`).toString('base64');
 
@@ -53,7 +66,11 @@ app.post('/api/stk-push', getAccessToken, async (req, res) => {
         const response = await axios.post(
             'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
             payload,
-            { headers: { Authorization: `Bearer ${req.accessToken}` } }
+            {
+                headers: {
+                    Authorization: `Bearer ${req.accessToken}`
+                }
+            }
         );
         res.status(200).json({ success: true, data: response.data });
     } catch (error) {
@@ -63,8 +80,8 @@ app.post('/api/stk-push', getAccessToken, async (req, res) => {
 });
 
 app.post('/api/mpesa-callback', (req, res) => {
-    const callbackData = req.body.Body.stkCallback;
-    if (callbackData.ResultCode === 0) {
+    const callbackData = req.body.Body?.stkCallback;
+    if (callbackData && callbackData.ResultCode === 0) {
         const metadata = callbackData.CallbackMetadata.Item;
         const amountPaid = metadata.find(o => o.Name === 'Amount').Value;
         const mpesaReceiptNumber = metadata.find(o => o.Name === 'MpesaReceiptNumber').Value;
