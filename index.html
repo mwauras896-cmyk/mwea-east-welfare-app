@@ -1,160 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mwea East JSS Teachers Welfare</title>
-    <style>
-        :root {
-            --deep-teal: #004d40;
-            --gold: #d4af37;
-            --light-bg: #f4f6f7;
-            --text-dark: #333333;
-        }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--light-bg); color: var(--text-dark); margin: 0; padding: 0; }
-        header { background-color: var(--deep-teal); color: var(--gold); padding: 1.5rem; text-align: center; border-bottom: 4px solid var(--gold); }
-        header h1 { margin: 0; font-size: 1.5rem; }
-        header p { margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #ffffff; }
-        .container { max-width: 700px; margin: 20px auto; padding: 15px; background: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h2 { color: var(--deep-teal); border-bottom: 2px solid var(--gold); padding-bottom: 5px; font-size: 1.2rem; margin-top: 25px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { background-color: var(--deep-teal); color: var(--gold); border: 2px solid var(--gold); padding: 12px; width: 100%; border-radius: 4px; font-weight: bold; font-size: 1rem; cursor: pointer; }
-        button:hover { background-color: #00332c; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: var(--deep-teal); color: white; }
-        .badge { background-color: #d4edda; color: #155724; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
-        .admin-notice { background: #fff8e1; border-left: 4px solid var(--gold); padding: 10px; margin-bottom: 15px; font-size: 0.85rem; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mwea East JSS Teachers Welfare</title>
+  <style>
+    :root {
+      --deep-teal: #004d40;
+      --gold: #d4af37;
+      --light-bg: #f4f6f7;
+      --text-dark: #333333;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: var(--deep-teal);
+      color: var(--gold);
+      padding: 1.5rem 1rem;
+      text-align: center;
+      border-bottom: 4px solid var(--gold);
+    }
+    .logo-container {
+      margin-bottom: 10px;
+    }
+    .app-logo {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      object-fit: cover;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    header p {
+      margin: 0.5rem 0 0 0;
+      font-size: 0.9rem;
+      color: #ffffff;
+    }
+    .container {
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 15px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: var(--deep-teal);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 5px;
+      font-size: 1.2rem;
+      margin-top: 25px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: var(--deep-teal);
+      color: var(--gold);
+      border: 2px solid var(--gold);
+      padding: 12px;
+      width: 100%;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #00332c;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: var(--deep-teal);
+      color: white;
+    }
+    .badge {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .admin-notice {
+      background: #fff8e1;
+      border-left: 4px solid var(--gold);
+      padding: 10px;
+      margin-bottom: 15px;
+      font-size: 0.85rem;
+    }
+  </style>
 </head>
 <body onload="fetchMembers()">
 
-    <header>
-        <h1>Mwea East JSS Teachers Welfare</h1>
-        <p>Transparency • Accountability • Support</p>
-    </header>
+  <header>
+    <div class="logo-container">
+      <img src="logo.png" alt="Mwea East JSS Welfare Logo" class="app-logo">
+    </div>
+    <h1>Mwea East JSS Teachers Welfare</h1>
+    <p>Transparency • Accountability • Support</p>
+  </header>
 
-    <div class="container">
-        <div class="admin-notice">
-            <strong>Chairman Security Notice:</strong> All administrative verifications, disbursements, and password resets are exclusively managed by the Chairman.
-        </div>
-
-        <!-- Registration Section -->
-        <h2>New Member Registration</h2>
-        <div class="form-group">
-            <label for="regName">Full Name</label>
-            <input type="text" id="regName" placeholder="e.g. John Mwaura">
-        </div>
-        <div class="form-group">
-            <label for="regSchool">School / Zone</label>
-            <input type="text" id="regSchool" placeholder="e.g. Kutus JSS">
-        </div>
-        <div class="form-group">
-            <label for="regPhone">Phone Number</label>
-            <input type="tel" id="regPhone" placeholder="07XXXXXXXX">
-        </div>
-        <button onclick="registerMember()">Register as Member</button>
-
-        <!-- Member Directory Section -->
-        <h2>Member Directory</h2>
-        <div class="form-group" style="margin-top: 10px;">
-            <input type="text" id="searchMember" placeholder="Search by name or school..." onkeyup="filterDirectory()">
-        </div>
-
-        <div style="overflow-x:auto;">
-            <table id="memberTable">
-                <thead>
-                    <tr>
-                        <th>Teacher Name</th>
-                        <th>School / Zone</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr><td colspan="3" style="text-align:center;">Loading members...</td></tr>
-                </tbody>
-            </table>
-        </div>
+  <div class="container">
+    <div class="admin-notice">
+      <strong>Chairman Security Notice:</strong> All administrative verifications, disbursements, and password resets are exclusively managed by the Chairman.
     </div>
 
-    <script>
-       
-const BACKEND_URL = 'https://mwea-east-welfare-app.onrender.com';
+    <!-- Registration Section -->
+    <h2>New Member Registration</h2>
+    <div class="form-group">
+      <label for="regName">Full Name</label>
+      <input type="text" id="regName" placeholder="e.g. John Mwaura">
+    </div>
+    <div class="form-group">
+      <label for="regSchool">School / Zone</label>
+      <input type="text" id="regSchool" placeholder="e.g. Kutus JSS">
+    </div>
+    <div class="form-group">
+      <label for="regPhone">Phone Number</label>
+      <input type="tel" id="regPhone" placeholder="07XXXXXXXX">
+    </div>
+    <button onclick="registerMember()">Register as Member</button>
 
-        async function fetchMembers() {
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/members`);
-                const result = await response.json();
-                if (result.success) {
-                    const tbody = document.getElementById('tableBody');
-                    tbody.innerHTML = '';
-                    if (result.data.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No members registered yet.</td></tr>';
-                        return;
-                    }
-                    result.data.forEach(m => {
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${m.name}</td>
-                                <td>${m.school}</td>
-                                <td><span class="badge">${m.status}</span></td>
-                            </tr>
-                        `;
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading members:', error);
-            }
+    <!-- Member Directory Section -->
+    <h2>Member Directory</h2>
+    <div class="form-group" style="margin-top: 10px;">
+      <input type="text" id="searchMember" placeholder="Search by name or school..." onkeyup="filterDirectory()">
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table id="memberTable">
+        <thead>
+          <tr>
+            <th>Teacher Name</th>
+            <th>School / Zone</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="3" style="text-align:center;">Loading members...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const BACKEND_URL = 'https://mwea-east-welfare-app.onrender.com';
+
+    async function fetchMembers() {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/members`);
+        const result = await response.json();
+
+        if (result.success) {
+          const tbody = document.getElementById('tableBody');
+          tbody.innerHTML = '';
+
+          if (result.data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No members registered yet.</td></tr>';
+            return;
+          }
+
+          result.data.forEach(m => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${m.name}</td>
+                <td>${m.school}</td>
+                <td><span class="badge">${m.status}</span></td>
+              </tr>
+            `;
+          });
         }
+      } catch (error) {
+        console.error('Error loading members:', error);
+      }
+    }
 
-        async function registerMember() {
-            const name = document.getElementById('regName').value.trim();
-            const school = document.getElementById('regSchool').value.trim();
-            const phone = document.getElementById('regPhone').value.trim();
+    async function registerMember() {
+      const name = document.getElementById('regName').value.trim();
+      const school = document.getElementById('regSchool').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
 
-            if (!name || !school || !phone) {
-                alert('Please fill in all registration fields.');
-                return;
-            }
+      if (!name || !school || !phone) {
+        alert('Please fill in all registration fields.');
+        return;
+      }
 
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, school, phone })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    alert('Registration successful!');
-                    document.getElementById('regName').value = '';
-                    document.getElementById('regSchool').value = '';
-                    document.getElementById('regPhone').value = '';
-                    fetchMembers(); // Refresh list
-                } else {
-                    alert('Error: ' + result.error);
-                }
-            } catch (error) {
-                alert('Network error during registration.');
-            }
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, school, phone })
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          alert('Registration successful!');
+          document.getElementById('regName').value = '';
+          document.getElementById('regSchool').value = '';
+          document.getElementById('regPhone').value = '';
+          fetchMembers(); // Refresh list
+        } else {
+          alert('Error: ' + result.error);
         }
+      } catch (error) {
+        alert('Network error during registration.');
+      }
+    }
 
-        function filterDirectory() {
-            let input = document.getElementById('searchMember').value.toLowerCase();
-            let table = document.getElementById('memberTable');
-            let tr = table.getElementsByTagName('tr');
+    function filterDirectory() {
+      let input = document.getElementById('searchMember').value.toLowerCase();
+      let table = document.getElementById('memberTable');
+      let tr = table.getElementsByTagName('tr');
 
-            for (let i = 1; i < tr.length; i++) {
-                let tdName = tr[i].getElementsByTagName('td')[0];
-                let tdSchool = tr[i].getElementsByTagName('td')[1];
-                if (tdName && tdSchool) {
-                    let nameVal = tdName.textContent.toLowerCase();
-                    let schoolVal = tdSchool.textContent.toLowerCase();
-                    tr[i].style.display = (nameVal.includes(input) || schoolVal.includes(input)) ? "" : "none";
-                }
-            }
+      for (let i = 1; i < tr.length; i++) {
+        let tdName = tr[i].getElementsByTagName('td')[0];
+        let tdSchool = tr[i].getElementsByTagName('td')[1];
+        if (tdName && tdSchool) {
+          let nameVal = tdName.textContent.toLowerCase();
+          let schoolVal = tdSchool.textContent.toLowerCase();
+          tr[i].style.display = (nameVal.includes(input) || schoolVal.includes(input)) ? "" : "none";
         }
-    </script>
+      }
+    }
+  </script>
 </body>
 </html>
