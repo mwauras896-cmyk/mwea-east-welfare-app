@@ -169,14 +169,15 @@
           </tr>
         </thead>
         <tbody id="tableBody">
-       <tr><td colspan="3" style="text-align:center;">⏳ Server waking up, please wait a few seconds...</td></tr>  
+          <tr><td colspan="3" style="text-align:center;">⏳ Server waking up, please wait a few seconds...</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
   <script>
-    const BACKEND_URL =const BACKEND_URL = 'https://mwea-east-welfare-app.onrender.com';
+    const BACKEND_URL = 'https://mwea-east-welfare-app.onrender.com';
+
     async function fetchMembers() {
       try {
         const response = await fetch(`${BACKEND_URL}/api/members`);
