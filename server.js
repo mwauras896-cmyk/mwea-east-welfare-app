@@ -17,10 +17,15 @@ const BUSINESS_SHORT_CODE = process.env.MPESA_SHORTCODE;
 const PASSKEY = process.env.MPESA_PASSKEY;
 const CALLBACK_URL = process.env.MPESA_CALLBACK_URL;
 
-// Database connection using Render's environment variable
+// Database connection configured for Render PostgreSQL
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+    ssl: { rejectUnauthorized: false }
+});
+
+// Root Route (Prevents 'Cannot GET /' error)
+app.get('/', (req, res) => {
+    res.send('Mwea East JSS Welfare API Service is active.');
 });
 
 // Initialize database table automatically on startup
@@ -119,18 +124,19 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
+// M-Pesa Callback Route
 app.post('/api/mpesa-callback', (req, res) => {
     const callbackData = req.body.Body?.stkCallback;
     if (callbackData && callbackData.ResultCode === 0) {
         const metadata = callbackData.CallbackMetadata.Item;
-        const amountPaid = metadata.find(o => o.Name === 'Amount').Value;
-        const mpesaReceiptNumber = metadata.find(o => o.Name === 'MpesaReceiptNumber').Value;
+        const amountPaid = metadata.find(o => o.Name === 'Amount')?.Value;
+        const mpesaReceiptNumber = metadata.find(o => o.Name === 'MpesaReceiptNumber')?.Value;
         console.log(`SUCCESS: Receipt ${mpesaReceiptNumber} of KES ${amountPaid}`);
     }
     res.status(200).json({ ResultCode: 0, ResultDesc: "Accepted" });
 });
 
-// Start server at the very bottom
+// Start server
 app.listen(PORT, () => {
     console.log(`Welfare Backend running on port ${PORT}`);
 });
