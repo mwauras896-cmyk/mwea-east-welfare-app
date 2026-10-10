@@ -17,13 +17,15 @@ const BUSINESS_SHORT_CODE = process.env.MPESA_SHORTCODE;
 const PASSKEY = process.env.MPESA_PASSKEY;
 const CALLBACK_URL = process.env.MPESA_CALLBACK_URL;
 
-// Database connection configured for Render PostgreSQL
+// Database connection handling both internal and external Render URLs
+const isInternalDb = process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('.render.com');
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
+    ssl: isInternalDb ? false : { rejectUnauthorized: false }
 });
 
-// Root Route (Prevents 'Cannot GET /' error)
+// Root route
 app.get('/', (req, res) => {
     res.send('Mwea East JSS Welfare API Service is active.');
 });
@@ -38,7 +40,8 @@ pool.query(`
         status VARCHAR(20) DEFAULT 'Active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
-`).catch(err => console.error('Table creation error:', err));
+`).then(() => console.log('Database initialized successfully'))
+  .catch(err => console.error('Table creation error:', err));
 
 // M-Pesa Access Token Middleware
 async function getAccessToken(req, res, next) {
@@ -95,14 +98,14 @@ app.post('/api/stkpush', getAccessToken, async (req, res) => {
     }
 });
 
-// Get all members for the directory
+// Get all members
 app.get('/api/members', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM members ORDER BY id DESC');
         res.status(200).json({ success: true, data: result.rows });
     } catch (error) {
         console.error('Fetch Members Error:', error);
-        res.status(500).json({ success: false, error: error.message });
+        res.status(500).json({ success: false, error: error.message || 'Database connection error' });
     }
 });
 
@@ -120,7 +123,7 @@ app.post('/api/register', async (req, res) => {
         res.status(200).json({ success: true, data: result.rows[0] });
     } catch (error) {
         console.error('Registration Error:', error);
-        res.status(500).json({ success: false, error: error.message });
+        res.status(500).json({ success: false, error: error.message || 'Registration failed' });
     }
 });
 
