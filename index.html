@@ -120,6 +120,13 @@
       margin-bottom: 15px;
       font-size: 0.85rem;
     }
+    .admin-section {
+      background: #eef2f3;
+      border: 1px dashed var(--deep-teal);
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 25px;
+    }
   </style>
 </head>
 <body onload="fetchMembers()">
@@ -134,7 +141,7 @@
 
   <div class="container">
     <div class="admin-notice">
-      <strong>Chairman Security Notice:</strong> All administrative verifications, disbursements, and password resets are exclusively managed by the Chairman.
+      <strong>Chairman Security Notice:</strong> All administrative verifications, disbursements, and password resets are exclusively managed byзел the Chairman.
     </div>
 
     <!-- Registration Section -->
@@ -143,4 +150,203 @@
       <label for="regName">Full Name</label>
       <input type="text" id="regName" placeholder="e.g. John Mwaura">
     </div>
-    <div class="form-
+    <div class="form-group">
+      <label for="regSchool">School / Zone</label>
+      <input type="text" id="regSchool" placeholder="e.g. Kutus JSS">
+    </div>
+    <div class="form-group">
+      <label for="regPhone">Phone Number</label>
+      <input type="tel" id="regPhone" placeholder="07XXXXXXXX">
+    </div>
+    <button onclick="registerMember()">Register as Member</button>
+
+    <!-- M-Pesa Contribution Section -->
+    <h2>Welfare Contribution (M-Pesa)</h2>
+    <div class="form-group">
+      <label for="mpesaPhone">Phone Number (Safaricom)</label>
+      <input type="tel" id="mpesaPhone" placeholder="07XXXXXXXX">
+    </div>
+    <div class="form-group">
+      <label for="mpesaAmount">Amount (KES)</label>
+      <input type="number" id="mpesaAmount" placeholder="e.g. 100" value="100">
+    </div>
+    <button onclick="triggerStkPush()" style="background-color: #2e7d32;">Pay via M-Pesa STK Push</button>
+    <div id="mpesaStatus" style="margin-top: 10px; font-weight: bold; text-align: center;"></div>
+
+    <!-- Member Directory Section -->
+    <h2>Member Directory</h2>
+    <div class="form-group" style="margin-top: 10px;">
+      <input type="text" id="searchMember" placeholder="Search by name or school..." onkeyup="filterDirectory()">
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table id="memberTable">
+        <thead>
+          <tr>
+            <th>Teacher Name</th>
+            <th>School / Zone</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="3" style="text-align:center;">⏳ Server waking up, please wait a few seconds...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Chairman Admin Access Section -->
+    <div class="admin-section">
+      <h2 style="margin-top:0; border-bottom-color: var(--deep-teal);">Chairman Administrative Access</h2>
+      <div id="adminLoginBox">
+        <div class="form-group">
+          <label for="adminPin">Enter Admin PIN</label>
+          <input type="password" id="adminPin" placeholder="Enter secure PIN">
+        </div>
+        <button onclick="verifyAdmin()" style="background-color: #333; color: var(--gold);">Unlock Admin Controls</button>
+      </div>
+
+      <div id="adminControlsBox" style="display: none;">
+        <p style="color: green; font-weight: bold;">🔓 Admin Access Granted</p>
+        <p class="hint">You can manage member verification status below or review system operations.</p>
+        <button onclick="lockAdmin()" style="background-color: #c0392b; color: white; width: auto; padding: 6px 12px; font-size: 0.85rem;">Lock Admin Panel</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const BACKEND_URL = 'https://mwea-east-welfare-app.onrender.com';
+
+    async function fetchMembers() {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/members`);
+        const result = await response.json();
+
+        if (result.success) {
+          const tbody = document.getElementById('tableBody');
+          tbody.innerHTML = '';
+
+          if (result.data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No members registered yet.</td></tr>';
+            return;
+          }
+
+          result.data.forEach(m => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${m.name}</td>
+                <td>${m.school}</td>
+                <td><span class="badge">${m.status}</span></td>
+              </tr>
+            `;
+          });
+        }
+      } catch (error) {
+        console.error('Error loading members:', error);
+      }
+    }
+
+    async function registerMember() {
+      const name = document.getElementById('regName').value.trim();
+      const school = document.getElementById('regSchool').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+
+      if (!name || !school || !phone) {
+        alert('Please fill in all registration fields.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, school, phone })
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          alert('Registration successful!');
+          document.getElementById('regName').value = '';
+          document.getElementById('regSchool').value = '';
+          document.getElementById('regPhone').value = '';
+          fetchMembers();
+        } else {
+          const errMsg = typeof result.error === 'object' ? JSON.stringify(result.error) : (result.error || 'Unknown database error');
+          alert('Error: ' + errMsg);
+        }
+      } catch (error) {
+        alert('Network error during registration.');
+      }
+    }
+
+    async function triggerStkPush() {
+      const phone = document.getElementById('mpesaPhone').value.trim();
+      const amount = document.getElementById('mpesaAmount').value.trim();
+      const statusDiv = document.getElementById('mpesaStatus');
+
+      if (!phone || !amount) {
+        alert('Please enter both phone number and contribution amount.');
+        return;
+      }
+
+      statusDiv.textContent = '⏳ Sending M-Pesa STK Push request... Check your phone.';
+      statusDiv.style.color = '#333';
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/stkpush`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, amount, accountReference: 'MweaWelfare' })
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          statusDiv.textContent = '✅ STK Push sent successfully! Enter your M-Pesa PIN on your phone.';
+          statusDiv.style.color = 'green';
+        } else {
+          const errDetail = result.error?.errorMessage || result.error || 'Failed to trigger STK push';
+          statusDiv.textContent = '❌ Error: ' + (typeof errDetail === 'object' ? JSON.stringify(errDetail) : errDetail);
+          statusDiv.style.color = 'red';
+        }
+      } catch (error) {
+        console.error('M-Pesa error:', error);
+        statusDiv.textContent = '❌ Network error during M-Pesa request.';
+        statusDiv.style.color = 'red';
+      }
+    }
+
+    function verifyAdmin() {
+      const pin = document.getElementById('adminPin').value.trim();
+      // Default Admin PIN set to 2026 (you can customize this)
+      if (pin === '2026') {
+        document.getElementById('adminLoginBox').style.display = 'none';
+        document.getElementById('adminControlsBox').style.display = 'block';
+        document.getElementById('adminPin').value = '';
+      } else {
+        alert('Incorrect Admin PIN.');
+      }
+    }
+
+    function lockAdmin() {
+      document.getElementById('adminControlsBox').style.display = 'none';
+      document.getElementById('adminLoginBox').style.display = 'block';
+    }
+
+    function filterDirectory() {
+      let input = document.getElementById('searchMember').value.toLowerCase();
+      let table = document.getElementById('memberTable');
+      let tr = table.getElementsByTagName('tr');
+
+      for (let i = 1; i < tr.length; i++) {
+        let tdName = tr[i].getElementsByTagName('td')[0];
+        let tdSchool = tr[i].getElementsByTagName('td')[1];
+        if (tdName && tdSchool) {
+          let nameVal = tdName.textContent.toLowerCase();
+          let schoolVal = tdSchool.textContent.toLowerCase();
+          tr[i].style.display = (nameVal.includes(input) || schoolVal.includes(input)) ? "" : "none";
+        }
+      }
+    }
+  </script>
+</body>
+</html>
