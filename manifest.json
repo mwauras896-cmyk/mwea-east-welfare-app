@@ -1,0 +1,21 @@
+{
+  "name": "Mwea East JSS Teachers Welfare",
+  "short_name": "Mwea Welfare",
+  "description": "Official welfare and contribution management app for Mwea East JSS Teachers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#004d40",
+  "theme_color": "#004d40",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
